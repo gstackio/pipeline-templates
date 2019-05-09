@@ -18,7 +18,7 @@ meta:
   url:      (( param "Please specify the full url of the target Concourse CI" ))
   pipeline: (( concat meta.name "-boshrelease" ))
   manifest:
-    path:   (( concat "manifests/" meta.name ".yml" ))
+    path:   (( concat meta.manifest.directory "/" meta.name ".yml" ))
     vars:   "--- {}"
     vars-pr: (( grab meta.manifest.vars ))
     operator_file_paths: "" # comma separated list relative to repo root
@@ -383,6 +383,7 @@ jobs:
             GIT_NAME:       (( grab meta.git.name ))
             AWS_ACCESS_KEY:       (( grab meta.aws.access_key ))
             AWS_SECRET_KEY:       (( grab meta.aws.secret_key ))
+            MANIFESTS_DIR: (( grab meta.manifest.directory ))
 
       - name: upload-git
         put: git
@@ -495,6 +496,7 @@ jobs:
             GIT_NAME:      (( grab meta.git.name ))
             BRANCH:        (( grab meta.github.branch ))
             STEMCELL_OS:   (( grab meta.bosh.stemcell.os ))
+            MANIFESTS_DIR: (( grab meta.manifest.directory ))
       - name: upload-git
         put: git
         params:
